@@ -18,6 +18,12 @@ $(function() {
     $(".time-break .minus").click(function() {
         clock.changeBreakTime("subtract");
     });
+    $(".time-start").click(function() {
+        clock.toggleClock();
+    });
+    $(".time-reset").click(function() {
+        clock.reset();
+    });
 });
 function Clock() {
 
@@ -26,8 +32,10 @@ function Clock() {
        sessionTime = 1500, //Length of a session in seconds
        breakTime = 300, //Length of a break in seconds
        sessionCount = 0, //The number off seconds
-       mode = "Session"; //Keeps track of what mode we're in - session or break
-       active = false; //Keeps track of whether the clock is running or not
+       mode = "Session", //Keeps track of what mode we're in - session or break
+       active = false, //Keeps track of whether the clock is running or not
+       _this = this, //Reference to the clock itself
+       timer; //Reference to the interval that we set up to make the timer run
 
        //Display Functions
 
@@ -105,7 +113,10 @@ function Clock() {
    //Functions to add or remove 60 seconds from the break time when the plus or minus buttons are interacted with
 
    this.changeBreakTime = function(command) {
-    if (command === "add") {
+       if (!active) {
+        this.reset();
+       }
+         if (command === "add") {
         breakTime += 60;
     } else if (breakTime > 60) {
         breakTime -= 60;
@@ -113,4 +124,67 @@ function Clock() {
     this.displayBreakTime();
     this.displayCurrentTime();
    }
+
+   //Toggle the clock between running and pausing
+   this.toggleClock = function() {
+       if (!active) {
+           //Start the clock running
+          active = true;
+          if (sessionCount === 0) {
+              sessionCount = 1;
+              this.displaySessionCount();
+          } 
+          $(".time-start").text("Pause");
+          timer = setInterval(function() {
+              _this.stepDown();
+           }, 1000);
+        } else {
+            $('.time-start').text("Start");
+            active = false;
+            clearInterval(timer);
+        }
+    }
+
+    //Subtract 1 seconds from currentTime, display the new currenTime, and when time runs out, alternate between session and break
+    this.stepDown = function() {
+        if (currentTime > 0) {
+            currentTime--;
+            this.displayCurrentTime();
+            if (currentTime === 0) {
+                if (mode === "Session") {
+                    mode = "Break";
+                    currentTime = breakTime;
+                    startTime = breakTime;
+                    this.displaySessionCount();
+                } else {
+                    mode = "Session";
+                    currentTime = sessionTime;
+                    startTime = sessionTime;
+                    sessionCount++;
+                    this.displaySessionCount();
+                }
+            }
+        }
+    }
+
+    //Function to reset the timer 
+    this.reset = function() {
+        //Clear the timer interval so the clock stops counting down if it's active
+        clearInterval(timer);
+        //Set active to false, make sure it's not running
+        active - false;
+        //Reset our mode to Session
+        mode = "Session";
+        //Rest the currentTime ti the sessionTime
+        currentTime = sessionTime;
+        //Reset the session count
+        sessionCount = 0;
+        //Make sure the text for the start/pause button is set to start
+        $('.time-start').text('Start');
+
+        //Display the correct currentTme, sessionTime, and sessionCount
+        this.displayCurrentTime();
+        this.displaySessionTime();
+        this.displaySessionCount();
+    }
 }
