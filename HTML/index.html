@@ -6,10 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pomodoro Clock</title>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../CSS/main.css">
+
+    <!-- JQuery -->
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    
+    <div class="clock">
+        <!-- Section containing the actual clock portion of the application-->
+        <div class="timer">
+            <div class="progress-radial step-0 session">
+                <div class="main-display overlay">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Session containing info about what session we're on -->
+        <div class="session-info">
+            <div class="session-count">
+            </div>
+        </div>
+
+        <!-- Section containing controls for adding and removing time from the session/break-->
+        <div class="settings">
+            <div class="time-session">
+                <h6>Session Time</h6>
+                <p class="time-session-display"></p>
+                <button class="minus">-</button>
+                <button class="plus">+</button>
+            </div>
+
+            <div class="time-break">
+                <h6>Break Time</h6>
+                <p class="time-break-display"></p>
+                <button class="minus">-</button>
+                <button class="plus">+</button>
+            </div>
+        </div>
+
+        <!-- Section containing our Start and Stop button -->
+        <div class="controls">
+            <button class="time-start">Start</button>
+            <button class="time-reset">Reset</button>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
     <script src="../JS/scripts.js"></script>
 </body>
 
